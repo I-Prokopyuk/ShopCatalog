@@ -16,30 +16,31 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
-
 public class ProductsViewHolder extends RecyclerView.ViewHolder {
     TextView productName, productPrice;
     ImageView productimage;
     ProgressBar productProgressBar;
+    String productPriceCurrency;
 
-    @Inject
     Picasso picasso;
 
     public ProductsViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        this.picasso = Picasso.get();
+
         productProgressBar = (ProgressBar) itemView.findViewById(R.id.product_progressBar);
         productimage = (ImageView) itemView.findViewById(R.id.product_image);
         productName = (TextView) itemView.findViewById(R.id.product_name);
         productPrice = (TextView) itemView.findViewById(R.id.product_price);
+
+        productPriceCurrency = itemView.getResources().getString(R.string.product_price_currency);
     }
 
     public void bind(Product product) {
 
-        productName.setText(Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage());
-        productPrice.setText(String.valueOf(product.getPrice()));
-
+        productName.setText(product.getCategory());
+        productPrice.setText(String.valueOf(product.getPrice()) + " " + productPriceCurrency);
 
         picasso.
                 load(Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())

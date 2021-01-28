@@ -12,20 +12,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class ProductsPagedListAdapter extends PagedListAdapter<Product, ProductsViewHolder> {
 
-    private List<Product> products;
-    private boolean isOnline;
-
-    private Picasso picasso;
-
     protected ProductsPagedListAdapter(@NonNull DiffUtil.ItemCallback<Product> diffCallback) {
         super(diffCallback);
-        Log.i(Constants.LOG_TAG,"create ProductsPagedListAdapter");
+        Log.i(Constants.LOG_TAG, "create ProductsPagedListAdapter");
     }
 
 //    protected ProductsPagedListAdapter() {
@@ -55,24 +47,5 @@ public class ProductsPagedListAdapter extends PagedListAdapter<Product, Products
     @Override
     public void onBindViewHolder(@NonNull ProductsViewHolder holder, int position) {
         holder.bind(getItem(position));
-    }
-
-    public void statusOnline(boolean isOnline) {
-        this.isOnline = isOnline;
-
-        Log.i(Constants.LOG_TAG, "ProductsAdapter statusOnline");
-    }
-
-    public void setServiceImageLoader(Picasso picasso) {
-        this.picasso = picasso;
-
-        Log.i(Constants.LOG_TAG, "ProductsAdapter setServiceImageLoader");
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products.addAll(products);
-        notifyDataSetChanged();
-
-        Log.i(Constants.LOG_TAG, "ProductsAdapter setProducts");
     }
 }

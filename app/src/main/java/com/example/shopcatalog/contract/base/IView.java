@@ -8,5 +8,6 @@ public interface IView {
 
     void hideProgressBar();
 
-    void showProducts(ProductsCatalogDataSource productsCatalogDataSource);
+    //void showProducts(ProductsCatalogDataSource productsCatalogDataSource);
+    void showProducts();
 }

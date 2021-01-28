@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.ActivityScoped;
+import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Remote;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-@ActivityScoped
+@AppScoped
 public class ProductsCatalogRepository implements ProductsData {
 
     private ProductsData productsRemoteData;

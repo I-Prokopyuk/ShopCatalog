@@ -16,5 +16,6 @@
     <string name="product_name">Name</string>
     <string name="product_code">Product code:</string>
     <string name="product_price">Price:</string>
+    <string name="product_price_currency">KZT</string>
     <string name="product_more">More information</string>
 </resources>

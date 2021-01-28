@@ -1,7 +1,6 @@
 package com.example.shopcatalog.repository.remote;
 
 import com.example.shopcatalog.data.model.Product;
-import com.example.shopcatalog.data.model.ProductList;
 
 import java.util.List;
 

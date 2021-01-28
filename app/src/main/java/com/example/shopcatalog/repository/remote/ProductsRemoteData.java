@@ -3,11 +3,18 @@ package com.example.shopcatalog.repository.remote;
 import android.util.Log;
 
 import com.example.shopcatalog.common.Constants;
+import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.repository.ProductsData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -23,17 +30,42 @@ public class ProductsRemoteData implements ProductsData {
 
     }
 
+    private static SingleSource<?> apply(List<Product> products) {
+        return products;
+    }
+
+    private static ObservableSource<?> apply(Product product) {
+        return product.setName("ref");
+    }
+
     @Override
     public void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
 
         queryLoadProducts.getProducts(category, startPosition, loadSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(productList -> {
+                //.unsubscribeOn(Schedulers.io())
+                .map(products -> Observable.fromIterable(products).toList())
 
-                    loadProductsCallback.onResultCallback(productList);
+                // .map(products -> modernProducts(products, category))
+                .subscribe(
 
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage()));
+                        productList -> {
+
+                            loadProductsCallback.onResultCallback(productList);
+
+                        }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage()));
+    }
+
+    List<Product> modernProducts(List<Product> listProducts, String category) {
+
+        List<Product> modernProducts = new ArrayList<>();
+
+        for (Product product : listProducts) {
+            product.setCategory(category);
+            modernProducts.add(product);
+        }
+        return modernProducts;
     }
 }
+

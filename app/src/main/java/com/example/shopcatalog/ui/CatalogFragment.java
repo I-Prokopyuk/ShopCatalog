@@ -27,28 +27,35 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Inject
     CatalogPresenter catalogPresenter;
 
+    @Inject
+    PagedList.Config config;
+
+    @Inject
+    ProductsCatalogDataSource productsCatalogDataSource;
 
     ProductsPagedListAdapter productsAdapter;
-
-    PagedList.Config config;
 
     PagedList<Product> pagedList;
 
     RecyclerView recyclerView;
 
+    boolean isFragmentCreated;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPageSize(10)
+        productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
+
+        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
+                .setNotifyExecutor(new UiThreadExecutor())
+                .setFetchExecutor(new BackgroundThreadExecutor())
                 .build();
 
-        productsAdapter = new ProductsPagedListAdapter(null);
 
+        Log.i(Constants.LOG_TAG, "Fragmnet onCreate " + isFragmentCreated);
 
-        //setRetainInstance(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -63,17 +70,18 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         return view;
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onResume() {
         super.onResume();
         catalogPresenter.attachView(this);
 
+        if (!isFragmentCreated) {
 
-        Log.i(Constants.LOG_TAG, "Fragmnet onResume");
+            catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_PHONE);
 
-        catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_PHONE);
-
+            isFragmentCreated = true;
+        }
+        Log.i(Constants.LOG_TAG, "Fragmnet onResume " + isFragmentCreated);
 
     }
 
@@ -96,12 +104,12 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     }
 
     @Override
-    public void showProducts(ProductsCatalogDataSource productsCatalogDataSource) {
+    public void showProducts() {
 
-        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-                .setNotifyExecutor(new UiThreadExecutor())
-                .setFetchExecutor(new BackgroundThreadExecutor())
-                .build();
+//        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
+//                .setNotifyExecutor(new UiThreadExecutor())
+//                .setFetchExecutor(new BackgroundThreadExecutor())
+//                .build();
 
         Log.i(Constants.LOG_TAG, "Fragment showProducts PagedList.Builder");
 

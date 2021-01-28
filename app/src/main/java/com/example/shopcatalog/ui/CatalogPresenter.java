@@ -17,11 +17,11 @@ import static com.example.shopcatalog.common.Constants.LOG_TAG;
 @ActivityScoped
 public class CatalogPresenter extends PresenterBase implements IContract.Presenter {
 
+    @Inject
     CompositeDisposable compositeDisposable;
 
     @Inject
     ProductsCatalogDataSource productsCatalogDataSource;
-
 
     @Inject
     public CatalogPresenter() {
@@ -52,7 +52,8 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
 
     @Override
     public void loadProducts(String category) {
-        productsCatalogDataSource.setCategory(category);
-        getView().showProducts(productsCatalogDataSource);
+        productsCatalogDataSource.giveCategory(category);
+        //getView().showProducts(productsCatalogDataSource);
+        getView().showProducts();
     }
 }

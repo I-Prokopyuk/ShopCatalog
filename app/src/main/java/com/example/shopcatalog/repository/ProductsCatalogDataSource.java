@@ -7,14 +7,14 @@ import androidx.paging.PositionalDataSource;
 
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
-import com.example.shopcatalog.di.scopes.ActivityScoped;
+import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.repository.remote.QueryLoadProducts;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-@ActivityScoped
+@AppScoped
 public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
 
     @Inject
@@ -27,9 +27,10 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
     @Inject
     public ProductsCatalogDataSource(ProductsCatalogRepository productsCatalogRepository) {
         this.productsCatalogRepository = productsCatalogRepository;
+        this.category = Constants.CATALOG_CATEGORY_PHONE;
     }
 
-    public void setCategory(String category) {
+    public void giveCategory(String category) {
         this.category = category;
     }
 
@@ -46,37 +47,6 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
                 }
             }
         });
-//
-//
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-//        Gson gson = gsonBuilder.create();
-//
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                .baseUrl(Constants.CATALOG_API_BASE_URL)
-//                .build();
-//
-//        QueryLoadProducts queryLoadProducts1 = retrofit.create(QueryLoadProducts.class);
-//
-//        List<Product> result = new ArrayList<>();
-//
-//        queryLoadProducts1.getProducts("tv", params.requestedStartPosition, params.requestedLoadSize)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(productList -> {
-//
-//
-//
-////                    for (Product product : productList) {
-////                        Log.i(Constants.LOG_TAG, product.getName() + " цена: " + product.getPrice()+"****");
-////                    }
-//                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage()));
-
-
     }
 
     @Override
