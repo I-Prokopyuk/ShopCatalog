@@ -15,4 +15,8 @@ public class Constants {
 
     //Log
     public static final String LOG_TAG = "myLogs";
+
+    //
+    public static final int DB_VERSION = 1;
+    public static final String DB_NAME = "myLogs";
 }
