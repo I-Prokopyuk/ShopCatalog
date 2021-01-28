@@ -1,5 +1,6 @@
 package com.example.shopcatalog.repository.remote;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.shopcatalog.common.Constants;
@@ -14,8 +15,10 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 @AppScoped
@@ -41,13 +44,16 @@ public class ProductsRemoteData implements ProductsData {
     @Override
     public void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
 
-        queryLoadProducts.getProducts(category, startPosition, loadSize)
+        Single<List<Product>> singleProducts = queryLoadProducts.getProducts(category, startPosition, loadSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                //.unsubscribeOn(Schedulers.io())
-                .map(products -> Observable.fromIterable(products).toList())
+                .unsubscribeOn(Schedulers.io());
 
-                // .map(products -> modernProducts(products, category))
+
+        Disposable disposable = singleProducts
+                .flattenAsObservable(products -> products)
+                .map(product -> product.setCategory(category))
+                .toList()
                 .subscribe(
 
                         productList -> {
