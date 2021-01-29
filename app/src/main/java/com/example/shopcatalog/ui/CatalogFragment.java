@@ -1,6 +1,5 @@
 package com.example.shopcatalog.ui;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +17,17 @@ import com.example.shopcatalog.executor.BackgroundThreadExecutor;
 import com.example.shopcatalog.executor.UiThreadExecutor;
 import com.example.shopcatalog.repository.ProductsCatalogDataSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class CatalogFragment extends DaggerFragment implements IContract.View {
 
@@ -48,14 +55,18 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
 
         pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-                .setNotifyExecutor(new UiThreadExecutor())
                 .setFetchExecutor(new BackgroundThreadExecutor())
+                .setNotifyExecutor(new UiThreadExecutor())
                 .build();
-
 
         Log.i(Constants.LOG_TAG, "Fragmnet onCreate " + isFragmentCreated);
 
         setRetainInstance(true);
+    }
+
+    public Product upgradeProduct(Product product) {
+        product.setCategory("tv");
+        return product;
     }
 
     @Override

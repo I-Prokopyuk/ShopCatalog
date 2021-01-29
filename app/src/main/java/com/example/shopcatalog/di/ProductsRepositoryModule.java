@@ -1,22 +1,21 @@
 package com.example.shopcatalog.di;
 
 import androidx.paging.PagedList;
-import androidx.room.Room;
 
-import com.example.shopcatalog.app.Application;
-import com.example.shopcatalog.common.Constants;
+import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
+import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;
 import com.example.shopcatalog.repository.ProductsData;
 import com.example.shopcatalog.repository.local.ProductDao;
-import com.example.shopcatalog.repository.local.ProductDatabase;
-import com.example.shopcatalog.repository.remote.QueryLoadProducts;
+import com.example.shopcatalog.repository.local.ProductsLocalData;
 import com.example.shopcatalog.repository.remote.ProductsRemoteData;
+import com.example.shopcatalog.repository.remote.QueryLoadProducts;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = {ProductsRemoteModule.class})
+@Module(includes = {ProductsRemoteModule.class, ProductsLocalModule.class})
 public class ProductsRepositoryModule {
 
     @Provides
@@ -27,6 +26,13 @@ public class ProductsRepositoryModule {
     }
 
     @Provides
+    @Local
+    @AppScoped
+    ProductsData provideCatalogLocakData(ProductDao productDao) {
+        return new ProductsLocalData(productDao);
+    }
+
+    @Provides
     @AppScoped
     PagedList.Config providePagedListConfig() {
         return new PagedList.Config.Builder()
@@ -34,18 +40,4 @@ public class ProductsRepositoryModule {
                 .setPageSize(1)
                 .build();
     }
-
-    @Provides
-    @AppScoped
-    ProductDatabase provideProductDatabase(Application application) {
-        return Room.databaseBuilder(application.getApplicationContext(), ProductDatabase.class, Constants.DB_NAME).build();
-    }
-
-    @Provides
-    @AppScoped
-    ProductDao provideProductDao(ProductDatabase productDatabase) {
-        return productDatabase.productDao();
-    }
-
-
 }

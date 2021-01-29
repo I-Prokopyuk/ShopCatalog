@@ -20,23 +20,6 @@ public class ProductsPagedListAdapter extends PagedListAdapter<Product, Products
         Log.i(Constants.LOG_TAG, "create ProductsPagedListAdapter");
     }
 
-//    protected ProductsPagedListAdapter() {
-//        super(DIFF_CALLBACK);
-//    }
-//
-//    private static DiffUtil.ItemCallback<Product> DIFF_CALLBACK = new DiffUtil.ItemCallback<Product>() {
-//        @Override
-//        public boolean areItemsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
-//            return oldItem.getProductId() == newItem.getProductId();
-//        }
-//
-//        @Override
-//        public boolean areContentsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
-//            return oldItem.getName().equals(newItem.getName()) && oldItem.getPrice() == newItem.getPrice();
-//        }
-//    };
-
-
     @NonNull
     @Override
     public ProductsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

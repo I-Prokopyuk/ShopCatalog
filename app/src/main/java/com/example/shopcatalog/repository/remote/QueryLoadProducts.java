@@ -10,5 +10,5 @@ import retrofit2.http.Query;
 
 public interface QueryLoadProducts {
     @GET("catalog/model/catalog/query.php?")
-    Single<List<Product>> getProducts(@Query("category") String category, @Query("row_offset") int rowOffset, @Query("row_count") int rowCount);
+    Single<List<Product>> getProducts(@Query("category") String category, @Query("row_offset") int startPosition, @Query("row_count") int loadSize);
 }
