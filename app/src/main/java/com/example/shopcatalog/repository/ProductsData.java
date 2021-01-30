@@ -11,4 +11,6 @@ public interface ProductsData {
     }
 
     void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback);
+
+    void insertProductLocal(List<Product> productList);
 }

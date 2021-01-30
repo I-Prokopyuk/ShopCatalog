@@ -38,8 +38,8 @@ public class ProductsLocalData implements ProductsData {
                 }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded"));
     }
 
-
-    public void insertProduct(List<Product> productList) {
+    @Override
+    public void insertProductLocal(List<Product> productList) {
 
         Completable.fromAction(() -> productDao.insertProduct(productList))
                 .subscribeOn(Schedulers.io())

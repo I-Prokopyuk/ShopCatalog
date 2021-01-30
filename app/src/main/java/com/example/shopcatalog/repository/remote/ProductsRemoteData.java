@@ -3,8 +3,11 @@ package com.example.shopcatalog.repository.remote;
 import android.util.Log;
 
 import com.example.shopcatalog.common.Constants;
+import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.repository.ProductsData;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -19,7 +22,6 @@ public class ProductsRemoteData implements ProductsData {
     @Inject
     public ProductsRemoteData(QueryLoadProducts catalogQuery) {
         this.queryLoadProducts = catalogQuery;
-
     }
 
     @Override
@@ -40,6 +42,11 @@ public class ProductsRemoteData implements ProductsData {
                     loadProductsCallback.onResultCallback(productList);
 
                 }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage()));
+    }
+
+    @Override
+    public void insertProductLocal(List<Product> productList) {
+
     }
 }
 

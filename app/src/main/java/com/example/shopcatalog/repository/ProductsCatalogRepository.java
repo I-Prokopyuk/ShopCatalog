@@ -4,16 +4,20 @@ import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;
+import com.example.shopcatalog.repository.local.ProductDao;
+import com.example.shopcatalog.repository.local.ProductsLocalData;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+
 @AppScoped
 public class ProductsCatalogRepository implements ProductsData {
 
-    private ProductsData productsLocalData;
+    private final ProductsData productsLocalData;
     private ProductsData productsRemoteData;
     private OnlineConnectedStatus onlineConnectedStatus;
     ProductsData productsData;
@@ -30,12 +34,21 @@ public class ProductsCatalogRepository implements ProductsData {
 
         productsData = onlineConnectedStatus.isOnlineConnected() ? productsRemoteData : productsLocalData;
 
-
         productsData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
                 loadProductsCallback.onResultCallback(products);
+
+                if (!products.isEmpty()) {
+                    insertProductLocal(products);
+                }
             }
         });
     }
+
+    @Override
+    public void insertProductLocal(List<Product> productList) {
+        productsLocalData.insertProductLocal(productList);
+    }
+
 }
