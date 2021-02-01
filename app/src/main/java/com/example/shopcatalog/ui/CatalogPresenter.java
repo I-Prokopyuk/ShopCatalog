@@ -29,6 +29,12 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     }
 
     @Override
+    public void detachView() {
+        super.detachView();
+        compositeDisposable.clear();
+    }
+
+    @Override
     public void destroy() {
         compositeDisposable.clear();
         compositeDisposable.dispose();
@@ -38,7 +44,6 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     public void loadProducts(String category) {
         if (compositeDisposable.size() > 0) compositeDisposable.dispose();
         productsCatalogDataSource.giveCategory(category);
-        //getView().showProducts(productsCatalogDataSource);
         getView().showProducts();
     }
 }

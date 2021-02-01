@@ -20,7 +20,7 @@ public final class Product {
 
     @SerializedName("sku")
     @Expose
-    private String cod;
+    private String code;
 
     @Expose
     private int price;
@@ -36,6 +36,9 @@ public final class Product {
     @Expose
     private String pathImage;
 
+    @Expose
+    private String url;
+
     private String category;
 
     public int getProductId() {
@@ -46,12 +49,12 @@ public final class Product {
         this.productId = productId;
     }
 
-    public String getCod() {
-        return cod;
+    public String getCode() {
+        return code;
     }
 
-    public void setCod(String cod) {
-        this.cod = cod;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getPrice() {
@@ -89,6 +92,15 @@ public final class Product {
     public String getCategory() {
         return category;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 
     public void setCategory(String category) {
         this.category = category;

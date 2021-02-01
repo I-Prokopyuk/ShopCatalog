@@ -23,8 +23,8 @@ public class ProductsRepositoryModule {
     @Provides
     @Remote
     @AppScoped
-    ProductsData provideCatalogRemoteData(QueryLoadProducts catalogQuery) {
-        return new ProductsRemoteData(catalogQuery);
+    ProductsData provideCatalogRemoteData(QueryLoadProducts catalogQuery, CompositeDisposable compositeDisposable) {
+        return new ProductsRemoteData(catalogQuery, compositeDisposable);
     }
 
     @Provides

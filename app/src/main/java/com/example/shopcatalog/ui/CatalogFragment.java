@@ -20,9 +20,6 @@ import com.example.shopcatalog.repository.ProductsCatalogDataSource;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 public class CatalogFragment extends DaggerFragment implements IContract.View {
 
@@ -58,54 +55,6 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
         setRetainInstance(true);
 
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-        Disposable disposable1 = Observable.just(1)
-                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
-
-        Disposable disposable2 = Observable.just(1)
-                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
-
-        Disposable disposable3 = Observable.just(1)
-                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
-
-        Log.i("myLogs", disposable1.toString());
-        Log.i("myLogs", disposable2.toString());
-        Log.i("myLogs", disposable3.toString());
-
-
-        compositeDisposable.add(disposable1);
-        compositeDisposable.add(disposable2);
-        compositeDisposable.add(disposable3);
-
-        Log.i("myLogs", disposable1.toString());
-        Log.i("myLogs", disposable2.toString());
-        Log.i("myLogs", disposable3.toString());
-
-
-        Log.i("myLogs", compositeDisposable.size() + " <<<");
-
-
-        compositeDisposable.dispose();
-
-        Log.i("myLogs", compositeDisposable.size() + " <<<");
-
-        disposable1.dispose();
-        disposable2 = null;
-        disposable3.dispose();
-
-       // disposable1 = null;
-
-
-        Log.i("myLogs", disposable1.toString());
-        Log.i("myLogs", disposable2.toString());
-        Log.i("myLogs", disposable3.toString());
-
-    }
-
-    public Product upgradeProduct(Product product) {
-        product.setCategory("tv");
-        return product;
     }
 
     @Override
@@ -134,6 +83,12 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         Log.i(Constants.LOG_TAG, "Fragmnet onResume " + isFragmentCreated);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        catalogPresenter.detachView();
+        Log.i(Constants.LOG_TAG, "Fragmnet Destroy View");
+    }
 
     @Override
     public void onDestroy() {
@@ -141,7 +96,6 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         catalogPresenter.destroy();
         Log.i(Constants.LOG_TAG, "Fragmnet Destroy");
     }
-
 
     @Override
     public void showProgressBar() {

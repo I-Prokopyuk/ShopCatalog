@@ -12,7 +12,6 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 @AppScoped
@@ -29,7 +28,7 @@ public class ProductsLocalData implements ProductsData {
     @Override
     public void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
 
-        productDao.getProducts(category, startPosition, loadSize)
+        compositeDisposable.add(productDao.getProducts(category, startPosition, loadSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -39,7 +38,7 @@ public class ProductsLocalData implements ProductsData {
 
                     Log.i(Constants.LOG_TAG, "ProductsLocalData Local loaded...");
 
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded"));
+                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded")));
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ProductsLocalData implements ProductsData {
 
         Log.i(Constants.LOG_TAG, "Data insert local repository........");
 
-        Log.i("myLogs",compositeDisposable.size()+" compositeDisposable size");
+        Log.i("myLogs", compositeDisposable.size() + " compositeDisposable size");
 
     }
 }

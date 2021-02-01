@@ -7,6 +7,6 @@
     <dimen name="nav_header_title_size">35sp</dimen>
     <dimen name="product_image_size">200dp</dimen>
     <dimen name="product_name_size">14sp</dimen>
-    <dimen name="product_attribute_size">14dp</dimen>
     <dimen name="product_price_size">14dp</dimen>
+    <dimen name="product_attribute_size">13dp</dimen>
 </resources>
