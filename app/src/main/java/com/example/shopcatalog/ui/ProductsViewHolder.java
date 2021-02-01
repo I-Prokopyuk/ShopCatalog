@@ -39,7 +39,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Product product) {
 
-        productName.setText(product.getCategory());
+        productName.setText(product.getName());
         productPrice.setText(String.valueOf(product.getPrice()) + " " + productPriceCurrency);
 
         picasso.
@@ -48,7 +48,6 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder {
                 .fit()
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
                 .into(productimage, new Callback() {
                     @Override
                     public void onSuccess() {

@@ -3,6 +3,7 @@ package com.example.shopcatalog.di;
 import androidx.paging.PagedList;
 
 import com.example.shopcatalog.data.model.Product;
+import com.example.shopcatalog.di.scopes.ActivityScoped;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;
@@ -14,6 +15,7 @@ import com.example.shopcatalog.repository.remote.QueryLoadProducts;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 
 @Module(includes = {ProductsRemoteModule.class, ProductsLocalModule.class})
 public class ProductsRepositoryModule {
@@ -28,8 +30,14 @@ public class ProductsRepositoryModule {
     @Provides
     @Local
     @AppScoped
-    ProductsData provideCatalogLocakData(ProductDao productDao) {
-        return new ProductsLocalData(productDao);
+    ProductsData provideCatalogLocakData(ProductDao productDao, CompositeDisposable compositeDisposable) {
+        return new ProductsLocalData(productDao, compositeDisposable);
+    }
+
+    @Provides
+    @AppScoped
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
     }
 
     @Provides

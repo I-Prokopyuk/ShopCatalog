@@ -17,17 +17,12 @@ import com.example.shopcatalog.executor.BackgroundThreadExecutor;
 import com.example.shopcatalog.executor.UiThreadExecutor;
 import com.example.shopcatalog.repository.ProductsCatalogDataSource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class CatalogFragment extends DaggerFragment implements IContract.View {
 
@@ -54,14 +49,58 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
         productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
 
-        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-                .setFetchExecutor(new BackgroundThreadExecutor())
-                .setNotifyExecutor(new UiThreadExecutor())
-                .build();
+//        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
+//                .setFetchExecutor(new BackgroundThreadExecutor())
+//                .setNotifyExecutor(new UiThreadExecutor())
+//                .build();
 
         Log.i(Constants.LOG_TAG, "Fragmnet onCreate " + isFragmentCreated);
 
         setRetainInstance(true);
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+        Disposable disposable1 = Observable.just(1)
+                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
+
+        Disposable disposable2 = Observable.just(1)
+                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
+
+        Disposable disposable3 = Observable.just(1)
+                .subscribe(integer -> Log.i("myLogs", "data_2" + integer));
+
+        Log.i("myLogs", disposable1.toString());
+        Log.i("myLogs", disposable2.toString());
+        Log.i("myLogs", disposable3.toString());
+
+
+        compositeDisposable.add(disposable1);
+        compositeDisposable.add(disposable2);
+        compositeDisposable.add(disposable3);
+
+        Log.i("myLogs", disposable1.toString());
+        Log.i("myLogs", disposable2.toString());
+        Log.i("myLogs", disposable3.toString());
+
+
+        Log.i("myLogs", compositeDisposable.size() + " <<<");
+
+
+        compositeDisposable.dispose();
+
+        Log.i("myLogs", compositeDisposable.size() + " <<<");
+
+        disposable1.dispose();
+        disposable2 = null;
+        disposable3.dispose();
+
+       // disposable1 = null;
+
+
+        Log.i("myLogs", disposable1.toString());
+        Log.i("myLogs", disposable2.toString());
+        Log.i("myLogs", disposable3.toString());
+
     }
 
     public Product upgradeProduct(Product product) {
@@ -93,14 +132,14 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
             isFragmentCreated = true;
         }
         Log.i(Constants.LOG_TAG, "Fragmnet onResume " + isFragmentCreated);
-
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        catalogPresenter.detachView();
+        catalogPresenter.destroy();
+        Log.i(Constants.LOG_TAG, "Fragmnet Destroy");
     }
 
 
@@ -117,15 +156,11 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Override
     public void showProducts() {
 
-//        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-//                .setNotifyExecutor(new UiThreadExecutor())
-//                .setFetchExecutor(new BackgroundThreadExecutor())
-//                .build();
-
-        Log.i(Constants.LOG_TAG, "Fragment showProducts PagedList.Builder");
+        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
+                .setNotifyExecutor(new UiThreadExecutor())
+                .setFetchExecutor(new BackgroundThreadExecutor())
+                .build();
 
         productsAdapter.submitList(pagedList);
-
-
     }
 }

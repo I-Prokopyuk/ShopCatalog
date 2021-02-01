@@ -41,6 +41,8 @@ public class ProductsRemoteData implements ProductsData {
 
                     loadProductsCallback.onResultCallback(productList);
 
+                    Log.i(Constants.LOG_TAG, "ProductsRemoteData Local loaded...");
+
                 }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage()));
     }
 

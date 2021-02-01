@@ -11,15 +11,19 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 @AppScoped
 public class ProductsLocalData implements ProductsData {
 
     ProductDao productDao;
+    CompositeDisposable compositeDisposable;
 
-    public ProductsLocalData(ProductDao productDao) {
+    public ProductsLocalData(ProductDao productDao, CompositeDisposable compositeDisposable) {
         this.productDao = productDao;
+        this.compositeDisposable = compositeDisposable;
     }
 
     @Override
@@ -41,8 +45,13 @@ public class ProductsLocalData implements ProductsData {
     @Override
     public void insertProductLocal(List<Product> productList) {
 
-        Completable.fromAction(() -> productDao.insertProduct(productList))
+        compositeDisposable.add(Completable.fromAction(() -> productDao.insertProduct(productList))
                 .subscribeOn(Schedulers.io())
-                .subscribe();
+                .subscribe());
+
+        Log.i(Constants.LOG_TAG, "Data insert local repository........");
+
+        Log.i("myLogs",compositeDisposable.size()+" compositeDisposable size");
+
     }
 }
