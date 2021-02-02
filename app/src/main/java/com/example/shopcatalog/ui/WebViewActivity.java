@@ -23,7 +23,7 @@ public class WebViewActivity extends AppCompatActivity {
     String url;
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
 
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
@@ -58,7 +58,7 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         internetDisposable.dispose();
         Log.i("myLogs", "WebViewActivity pause.....");

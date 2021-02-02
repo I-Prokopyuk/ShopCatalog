@@ -28,6 +28,20 @@ public class CatalogActivity extends DaggerAppCompatActivity {
     CatalogPresenter catalogPresenter;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i("myLogs", "CatalogActivity Resume.....");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.i("myLogs", "CatalogActivity Pause.....");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);

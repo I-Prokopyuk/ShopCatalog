@@ -98,6 +98,13 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        Log.i(Constants.LOG_TAG, "Fragmnet Pause.....");
+    }
+
+    @Override
     public void showProgressBar() {
 
     }
