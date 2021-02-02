@@ -18,4 +18,6 @@
     <string name="product_price">Price:</string>
     <string name="product_price_currency">KZT</string>
     <string name="product_more">More information</string>
+
+    <string name="warning_no_connection">No internet connection</string>
 </resources>

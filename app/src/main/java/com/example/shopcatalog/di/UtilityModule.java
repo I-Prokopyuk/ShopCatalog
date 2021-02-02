@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 
 import com.example.shopcatalog.app.Application;
 import com.example.shopcatalog.di.scopes.AppScoped;
+import com.example.shopcatalog.utils.FullUrl;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 import com.squareup.picasso.Picasso;
 

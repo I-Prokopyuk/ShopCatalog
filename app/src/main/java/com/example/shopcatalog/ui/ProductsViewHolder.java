@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
+import com.example.shopcatalog.utils.FullUrl;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -59,7 +60,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
         productCode.setText(String.valueOf(product.getCode()));
 
         picasso.
-                load(Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())
+                load(Constants.CATALOG_API_BASE_URL + Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())
                 .error(R.drawable.ic_baseline_photo_camera_150)
                 .fit()
                 .centerInside()
@@ -80,8 +81,9 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View v) {
         Context context = v.getContext();
-        Intent intent = new Intent(v.getContext(), WebViewActivity.class);
-        intent.putExtra("url", product.getUrl());
-        v.getContext().startActivity(intent);
+        Intent intent = new Intent(context, WebViewActivity.class);
+        String fullUrl = FullUrl.getFullUrl(product.getCategory(), product.getUrl());
+        intent.putExtra("url", fullUrl);
+        context.startActivity(intent);
     }
 }
