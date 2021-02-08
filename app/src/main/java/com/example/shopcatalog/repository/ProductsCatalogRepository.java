@@ -1,11 +1,14 @@
 package com.example.shopcatalog.repository;
 
+import android.util.Log;
+
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,7 +19,7 @@ public class ProductsCatalogRepository implements ProductsData {
     private final ProductsData productsLocalData;
     private ProductsData productsRemoteData;
     private OnlineConnectedStatus onlineConnectedStatus;
-    ProductsData productsData;
+    private ProductsData productsData;
 
     @Inject
     public ProductsCatalogRepository(@Remote ProductsData productsRemoteData, @Local ProductsData productsLocalData, OnlineConnectedStatus onlineConnectedStatus) {
@@ -33,18 +36,52 @@ public class ProductsCatalogRepository implements ProductsData {
         productsData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
+
+                products = new ArrayList<>();
+
                 loadProductsCallback.onResultCallback(products);
 
+                if (products.isEmpty() && !onlineConnectedStatus.isOnlineConnected())
+                    Log.i("myLogs", "Нет подключение к Интернету!");
+
+                if (products.isEmpty() && onlineConnectedStatus.isOnlineConnected())
+                    Log.i("myLogs", "Не товаров в данной категории!");
+
                 if (!products.isEmpty() && onlineConnectedStatus.isOnlineConnected()) {
-                    insertProductLocal(products);
+                    insertProduct(products);
                 }
             }
         });
+
+//        if (onlineConnectedStatus.isOnlineConnected()) {
+//
+//            productsRemoteData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
+//                @Override
+//                public void onResultCallback(List<Product> products) {
+//
+//                    if (!products.isEmpty()) insertProduct(products);
+//
+//                    getProductsLocalDB(category, startPosition, loadSize, loadProductsCallback);
+//                }
+//            });
+//        } else {
+//            getProductsLocalDB(category, startPosition, loadSize, loadProductsCallback);
+//        }
     }
+
+//    public void getProductsLocalDB(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
+//
+//
+//        productsLocalData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
+//            @Override
+//            public void onResultCallback(List<Product> products) {
+//                loadProductsCallback.onResultCallback(products);
+//            }
+//        });
+//    }
 
     @Override
-    public void insertProductLocal(List<Product> productList) {
-        productsLocalData.insertProductLocal(productList);
+    public void insertProduct(List<Product> productList) {
+        productsLocalData.insertProduct(productList);
     }
-
 }

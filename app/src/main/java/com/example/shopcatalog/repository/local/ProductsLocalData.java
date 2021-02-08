@@ -38,11 +38,11 @@ public class ProductsLocalData implements ProductsData {
 
                     Log.i(Constants.LOG_TAG, "ProductsLocalData Local loaded...");
 
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded")));
+                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
     }
 
     @Override
-    public void insertProductLocal(List<Product> productList) {
+    public void insertProduct(List<Product> productList) {
 
         compositeDisposable.add(Completable.fromAction(() -> productDao.insertProduct(productList))
                 .subscribeOn(Schedulers.io())
@@ -51,6 +51,5 @@ public class ProductsLocalData implements ProductsData {
         Log.i(Constants.LOG_TAG, "Data insert local repository........");
 
         Log.i("myLogs", compositeDisposable.size() + " compositeDisposable size");
-
     }
 }

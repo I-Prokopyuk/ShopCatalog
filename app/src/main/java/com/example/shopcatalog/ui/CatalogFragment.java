@@ -5,7 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,12 +18,20 @@ import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.contract.IContract;
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.executor.BackgroundThreadExecutor;
-import com.example.shopcatalog.executor.UiThreadExecutor;
+import com.example.shopcatalog.repository.MySourceFactory;
 import com.example.shopcatalog.repository.ProductsCatalogDataSource;
+import com.example.shopcatalog.repository.ProductsCatalogRepository;
+import com.example.shopcatalog.repository.local.ProductDao;
+import com.example.shopcatalog.repository.remote.ProductsRemoteData;
+import com.example.shopcatalog.utils.OnlineConnectedStatus;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class CatalogFragment extends DaggerFragment implements IContract.View {
 
@@ -32,11 +44,35 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Inject
     ProductsCatalogDataSource productsCatalogDataSource;
 
-    ProductsPagedListAdapter productsAdapter;
+    @Inject
+    OnlineConnectedStatus onlineConnectedStatus;
 
-    PagedList<Product> pagedList;
+    ////
+    @Inject
+    ProductsCatalogRepository productsCatalogRepository;
 
-    RecyclerView recyclerView;
+    ///
+    MySourceFactory mySourceFactory;
+
+    ///
+    @Inject
+    ProductDao productDao;
+
+    //
+    @Inject
+    ProductsRemoteData productsRemoteData;
+
+    //
+    LiveData<PagedList<Product>> pagedListLiveData;
+
+
+    private ProductsPagedListAdapter productsAdapter;
+
+    private PagedList<Product> pagedList;
+
+    private RecyclerView recyclerView;
+
+    private Disposable internetDisposable;
 
     boolean isFragmentCreated;
 
@@ -46,15 +82,7 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
         productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
 
-//        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-//                .setFetchExecutor(new BackgroundThreadExecutor())
-//                .setNotifyExecutor(new UiThreadExecutor())
-//                .build();
-
-        Log.i(Constants.LOG_TAG, "Fragmnet onCreate " + isFragmentCreated);
-
         setRetainInstance(true);
-
     }
 
     @Override
@@ -74,13 +102,40 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         super.onResume();
         catalogPresenter.attachView(this);
 
-        if (!isFragmentCreated) {
+        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnected -> {
 
-            catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_PHONE);
+                    //default loaded
 
-            isFragmentCreated = true;
-        }
-        Log.i(Constants.LOG_TAG, "Fragmnet onResume " + isFragmentCreated);
+                    if (!isFragmentCreated) {
+
+                        onlineConnectedStatus.setStatusOnlineConnected(isConnected);
+
+                        catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_PHONE);
+
+                        isFragmentCreated = true;
+                    } else {
+
+
+                        if ((onlineConnectedStatus.isOnlineConnected() != isConnected) && isFragmentCreated) {
+
+                            onlineConnectedStatus.setStatusOnlineConnected(isConnected);
+
+                            if (isConnected) {
+                                Toast.makeText(getContext(), "Internet is connected", Toast.LENGTH_SHORT).show();
+                                //pagedListLiveData.getValue().getDataSource().invalidate();
+                                mySourceFactory.getProductsCatalogDataSource().invalidate();
+                            } else
+                                Toast.makeText(getContext(), R.string.warning_no_connection, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                });
+
+
     }
 
     @Override
@@ -100,8 +155,7 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Override
     public void onPause() {
         super.onPause();
-
-        Log.i(Constants.LOG_TAG, "Fragmnet Pause.....");
+        internetDisposable.dispose();
     }
 
     @Override
@@ -116,12 +170,91 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
     @Override
     public void showProducts() {
+        mySourceFactory = new MySourceFactory(productsCatalogRepository);
 
-        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-                .setNotifyExecutor(new UiThreadExecutor())
+        LiveData<PagedList<Product>> pagedListLiveData = new LivePagedListBuilder<>(mySourceFactory, config)
                 .setFetchExecutor(new BackgroundThreadExecutor())
                 .build();
 
-        productsAdapter.submitList(pagedList);
+
+//        pagedListLiveData = new LivePagedListBuilder<>(productDao.getAll(Constants.CATALOG_CATEGORY_PHONE), config)
+//                .setFetchExecutor(new BackgroundThreadExecutor())
+//                .setBoundaryCallback(new PagedList.BoundaryCallback<Product>() {
+//                    @Override
+//                    public void onZeroItemsLoaded() {
+//                        super.onZeroItemsLoaded();
+//
+//                        Log.i("myLogs", "Zero Items.........");
+//
+//                        productsRemoteData.getProducts(Constants.CATALOG_CATEGORY_PHONE, startPosition, 5, new ProductsData.LoadProductsCallback() {
+//                            @Override
+//                            public void onResultCallback(List<Product> products) {
+//
+//                                for (Product product : products) {
+//
+//                                    Log.i("myLogs", product.getName() + " " + product.getPrice() + " " + product.getCategory());
+//                                }
+//
+//                                Completable.fromAction(() -> productDao.insertProduct(products))
+//                                        .subscribeOn(Schedulers.io())
+//                                        .subscribe();
+//
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onItemAtFrontLoaded(Product itemAtFront) {
+//                        super.onItemAtFrontLoaded(itemAtFront);
+//                    }
+//
+//                    @Override
+//                    public void onItemAtEndLoaded(Product itemAtEnd) {
+//                        super.onItemAtEndLoaded(itemAtEnd);
+//
+//                        startPosition =startPosition + 5;
+//
+//
+//                        Log.i("myLogs", "End Loaded.........startPosition: " + startPosition);
+//
+//                        productsRemoteData.getProducts(Constants.CATALOG_CATEGORY_PHONE, startPosition, 5, new ProductsData.LoadProductsCallback() {
+//                            @Override
+//                            public void onResultCallback(List<Product> products) {
+//
+//                                Completable.fromAction(() -> productDao.insertProduct(products))
+//                                        .subscribeOn(Schedulers.io())
+//                                        .subscribe();
+//                            }
+//                        });
+//
+//
+//                    }
+//                })
+//                .build();
+
+
+        pagedListLiveData.observe(this, new Observer<PagedList<Product>>() {
+            @Override
+            public void onChanged(PagedList<Product> products) {
+                productsAdapter.submitList(products);
+            }
+        });
+
+
+//        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
+//                .setNotifyExecutor(new UiThreadExecutor())
+//                .setFetchExecutor(new BackgroundThreadExecutor())
+//                .build();
+//
+//        productsAdapter.submitList(pagedList);
     }
+
+    @Override
+    public void updatePageList() {
+
+    }
+
 }
+
+
+

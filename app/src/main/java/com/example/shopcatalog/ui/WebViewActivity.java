@@ -6,21 +6,20 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
+import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends DaggerAppCompatActivity {
 
     private Disposable internetDisposable;
-    WebView webView;
-    String url;
+    private WebView webView;
+    private String url;
 
     @Override
     protected void onResume() {
@@ -38,7 +37,7 @@ public class WebViewActivity extends AppCompatActivity {
                         webView.setVisibility(View.INVISIBLE);
                         Toast.makeText(this, R.string.warning_no_connection, Toast.LENGTH_SHORT).show();
                     }
-                });
+                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!"));
 
         Log.i("myLogs", "WebViewActivity Resume.....");
     }

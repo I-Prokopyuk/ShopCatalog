@@ -43,7 +43,10 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     @Override
     public void loadProducts(String category) {
         if (compositeDisposable.size() > 0) compositeDisposable.dispose();
-        productsCatalogDataSource.giveCategory(category);
         getView().showProducts();
+    }
+
+    public void updatePageList() {
+        getView().updatePageList();
     }
 }

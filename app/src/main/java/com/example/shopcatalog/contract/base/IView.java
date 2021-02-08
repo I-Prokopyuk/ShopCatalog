@@ -1,7 +1,5 @@
 package com.example.shopcatalog.contract.base;
 
-import com.example.shopcatalog.repository.ProductsCatalogDataSource;
-
 public interface IView {
 
     void showProgressBar();
@@ -10,4 +8,6 @@ public interface IView {
 
     //void showProducts(ProductsCatalogDataSource productsCatalogDataSource);
     void showProducts();
+
+    void updatePageList();
 }

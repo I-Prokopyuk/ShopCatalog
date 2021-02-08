@@ -37,6 +37,8 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
     @Override
     public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<Product> callback) {
 
+        Log.i(Constants.LOG_TAG, "loadInitial --->  " + params.requestedStartPosition + " , " + params.requestedLoadSize);
+
         productsCatalogRepository.getProducts(category, params.requestedStartPosition, params.requestedLoadSize, new ProductsData.LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
@@ -52,6 +54,8 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
     @Override
     public void loadRange(@NonNull LoadRangeParams params, @NonNull LoadRangeCallback<Product> callback) {
 
+        Log.i(Constants.LOG_TAG, "loadRange --->  " + params.startPosition + " , " + params.loadSize);
+
         productsCatalogRepository.getProducts(category, params.startPosition, params.loadSize, new ProductsData.LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
@@ -61,7 +65,6 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
                 for (Product product : products) {
                     Log.i(Constants.LOG_TAG, product.getName() + " цена: " + product.getPrice() + " <<<<<<<<< loadRange <<<<<<<<<");
                 }
-
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.shopcatalog.app;
 
+
 import com.example.shopcatalog.di.DaggerAppComponent;
 
 import dagger.android.AndroidInjector;

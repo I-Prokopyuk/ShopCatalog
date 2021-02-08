@@ -34,6 +34,7 @@ public class ProductsRemoteData implements ProductsData {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
+                .retry(3)
                 .flattenAsObservable(products -> products)
                 .map(product -> {
                     product.setCategory(category);
@@ -44,13 +45,13 @@ public class ProductsRemoteData implements ProductsData {
 
                     loadProductsCallback.onResultCallback(productList);
 
-                    Log.i(Constants.LOG_TAG, "ProductsRemoteData Local loaded...");
-
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage())));
+                    Log.i(Constants.LOG_TAG, "ProductsRemoteData Remote loaded...");
+//ошибка соедение с сайтом
+                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error remote connected! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
     }
 
     @Override
-    public void insertProductLocal(List<Product> productList) {
+    public void insertProduct(List<Product> productList) {
 
     }
 }
