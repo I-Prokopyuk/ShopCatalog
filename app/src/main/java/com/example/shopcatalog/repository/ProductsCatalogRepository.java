@@ -8,7 +8,6 @@ import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,48 +36,20 @@ public class ProductsCatalogRepository implements ProductsData {
             @Override
             public void onResultCallback(List<Product> products) {
 
-                products = new ArrayList<>();
-
                 loadProductsCallback.onResultCallback(products);
 
                 if (products.isEmpty() && !onlineConnectedStatus.isOnlineConnected())
-                    Log.i("myLogs", "Нет подключение к Интернету!");
+                    Log.i("myLogs", "Нет подключения к Интернету!");
 
                 if (products.isEmpty() && onlineConnectedStatus.isOnlineConnected())
-                    Log.i("myLogs", "Не товаров в данной категории!");
+                    Log.i("myLogs", "Нет товаров в данной категории!");
 
                 if (!products.isEmpty() && onlineConnectedStatus.isOnlineConnected()) {
                     insertProduct(products);
                 }
             }
         });
-
-//        if (onlineConnectedStatus.isOnlineConnected()) {
-//
-//            productsRemoteData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
-//                @Override
-//                public void onResultCallback(List<Product> products) {
-//
-//                    if (!products.isEmpty()) insertProduct(products);
-//
-//                    getProductsLocalDB(category, startPosition, loadSize, loadProductsCallback);
-//                }
-//            });
-//        } else {
-//            getProductsLocalDB(category, startPosition, loadSize, loadProductsCallback);
-//        }
     }
-
-//    public void getProductsLocalDB(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
-//
-//
-//        productsLocalData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
-//            @Override
-//            public void onResultCallback(List<Product> products) {
-//                loadProductsCallback.onResultCallback(products);
-//            }
-//        });
-//    }
 
     @Override
     public void insertProduct(List<Product> productList) {

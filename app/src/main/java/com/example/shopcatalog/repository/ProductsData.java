@@ -8,6 +8,7 @@ public interface ProductsData {
 
     interface LoadProductsCallback {
         void onResultCallback(List<Product> products);
+        void onErrorCallback()
     }
 
     void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback);

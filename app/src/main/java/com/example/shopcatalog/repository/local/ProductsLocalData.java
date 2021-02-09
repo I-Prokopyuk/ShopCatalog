@@ -47,9 +47,5 @@ public class ProductsLocalData implements ProductsData {
         compositeDisposable.add(Completable.fromAction(() -> productDao.insertProduct(productList))
                 .subscribeOn(Schedulers.io())
                 .subscribe());
-
-        Log.i(Constants.LOG_TAG, "Data insert local repository........");
-
-        Log.i("myLogs", compositeDisposable.size() + " compositeDisposable size");
     }
 }

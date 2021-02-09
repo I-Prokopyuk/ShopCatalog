@@ -46,8 +46,7 @@ public class ProductsRemoteData implements ProductsData {
                     loadProductsCallback.onResultCallback(productList);
 
                     Log.i(Constants.LOG_TAG, "ProductsRemoteData Remote loaded...");
-//ошибка соедение с сайтом
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error remote connected! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
+                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + " Error remote connected! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
     }
 
     @Override

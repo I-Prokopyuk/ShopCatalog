@@ -1,13 +1,15 @@
 package com.example.shopcatalog.contract.base;
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
+
+import com.example.shopcatalog.data.model.Product;
+
 public interface IView {
 
     void showProgressBar();
 
     void hideProgressBar();
 
-    //void showProducts(ProductsCatalogDataSource productsCatalogDataSource);
-    void showProducts();
-
-    void updatePageList();
+    void showProducts(LiveData<PagedList<Product>> pagedListLiveData);
 }

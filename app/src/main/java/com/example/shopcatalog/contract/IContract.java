@@ -10,5 +10,9 @@ public interface IContract {
     interface Presenter {
 
         void loadProducts(String category);
+
+        void invalidateDataSource();
+
+        void clearCompositeDisposable();
     }
 }

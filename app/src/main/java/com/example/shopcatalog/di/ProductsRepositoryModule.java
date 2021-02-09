@@ -2,8 +2,6 @@ package com.example.shopcatalog.di;
 
 import androidx.paging.PagedList;
 
-import com.example.shopcatalog.data.model.Product;
-import com.example.shopcatalog.di.scopes.ActivityScoped;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Local;
 import com.example.shopcatalog.di.scopes.Remote;

@@ -19,6 +19,7 @@ public class Constants {
     public static final String CATALOG_CATEGORY_WATCH = "watch";
     public static final String CATALOG_CATEGORY_FRIDGE = "fridge";
     public static final String CATALOG_CATEGORY_FURNITURE = "furniture";
+    public static final String CATALOG_CATEGORY_DEFAULT = CATALOG_CATEGORY_PHONE;
 
     // Log
     public static final String LOG_TAG = "myLogs";
