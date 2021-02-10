@@ -35,7 +35,7 @@ public class WebViewActivity extends DaggerAppCompatActivity {
                         webView.loadUrl(url);
                     } else {
                         webView.setVisibility(View.INVISIBLE);
-                        Toast.makeText(this, R.string.warning_no_connection, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
                     }
                 }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!"));
 

@@ -34,19 +34,19 @@ public class ProductsRemoteData implements ProductsData {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .retry(3)
+                .retry(2)
                 .flattenAsObservable(products -> products)
                 .map(product -> {
                     product.setCategory(category);
                     return product;
                 })
                 .toList()
-                .subscribe(productList -> {
-
-                    loadProductsCallback.onResultCallback(productList);
-
-                    Log.i(Constants.LOG_TAG, "ProductsRemoteData Remote loaded...");
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + " Error remote connected! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
+                .subscribe(productList -> loadProductsCallback.onResultCallback(productList),
+                        throwable -> {
+                            loadProductsCallback.onErrorCallback();
+                            Log.i(Constants.LOG_TAG, throwable.getMessage());
+                        }
+                ));
     }
 
     @Override

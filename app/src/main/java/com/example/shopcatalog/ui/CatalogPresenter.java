@@ -10,6 +10,7 @@ import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.ActivityScoped;
 import com.example.shopcatalog.executor.BackgroundThreadExecutor;
 import com.example.shopcatalog.repository.MySourceFactory;
+import com.example.shopcatalog.utils.OnlineConnectedStatus;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,9 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
 
     @Inject
     MySourceFactory mySourceFactory;
+
+    @Inject
+    OnlineConnectedStatus onlineConnectedStatus;
 
     @Inject
     public CatalogPresenter() {
@@ -47,12 +51,26 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     @Override
     public void loadProducts(String category) {
 
+        getView().showProgressBar();
+
         if (compositeDisposable.size() > 0) clearCompositeDisposable();
 
         mySourceFactory.setCategory(category);
 
         LiveData<PagedList<Product>> pagedListLiveData = new LivePagedListBuilder<>(mySourceFactory, config)
                 .setFetchExecutor(new BackgroundThreadExecutor())
+                .setBoundaryCallback(new PagedList.BoundaryCallback<Product>() {
+                    @Override
+                    public void onZeroItemsLoaded() {
+                        super.onZeroItemsLoaded();
+//
+//                        if (onlineConnectedStatus.isOnlineConnected()) {
+//
+//                        } else
+
+
+                    }
+                })
                 .build();
 
         getView().showProducts(pagedListLiveData);

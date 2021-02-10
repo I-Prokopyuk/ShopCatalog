@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -36,6 +37,7 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     private ProductsPagedListAdapter productsAdapter;
 
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
 
     private Disposable internetDisposable;
 
@@ -58,6 +60,8 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
         recyclerView.setAdapter(productsAdapter);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         return view;
     }
@@ -87,10 +91,10 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
                             onlineConnectedStatus.setStatusOnlineConnected(isConnected);
 
                             if (isConnected) {
-                                Toast.makeText(getContext(), "Internet is connected", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.display_info_connection, Toast.LENGTH_SHORT).show();
                                 catalogPresenter.invalidateDataSource();
                             } else
-                                Toast.makeText(getContext(), R.string.warning_no_connection, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -124,11 +128,11 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
     @Override
     public void showProgressBar() {
-
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

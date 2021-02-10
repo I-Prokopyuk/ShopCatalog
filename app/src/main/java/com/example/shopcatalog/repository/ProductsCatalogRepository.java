@@ -32,21 +32,27 @@ public class ProductsCatalogRepository implements ProductsData {
 
         productsData = onlineConnectedStatus.isOnlineConnected() ? productsRemoteData : productsLocalData;
 
+        getProductsFromRepository(productsData, category, startPosition, loadSize, loadProductsCallback);
+    }
+
+    void getProductsFromRepository(ProductsData productsData, String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
+
         productsData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
 
+                Log.i("myLogs", "onResultCallback <<<<<<<<<<<<<<<<<<<<<<");
+
                 loadProductsCallback.onResultCallback(products);
 
-                if (products.isEmpty() && !onlineConnectedStatus.isOnlineConnected())
-                    Log.i("myLogs", "Нет подключения к Интернету!");
-
-                if (products.isEmpty() && onlineConnectedStatus.isOnlineConnected())
-                    Log.i("myLogs", "Нет товаров в данной категории!");
-
-                if (!products.isEmpty() && onlineConnectedStatus.isOnlineConnected()) {
+                if (!products.isEmpty() && onlineConnectedStatus.isOnlineConnected())
                     insertProduct(products);
-                }
+            }
+
+            @Override
+            public void onErrorCallback() {
+                Log.i("myLogs", "onErrorCallback <<<<<<<<<<<<<<<<<<<<<<");
+                getProductsFromRepository(productsLocalData, category, startPosition, loadSize, loadProductsCallback);
             }
         });
     }

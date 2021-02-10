@@ -19,5 +19,7 @@
     <string name="product_price_currency">KZT</string>
     <string name="product_more">More information</string>
 
-    <string name="warning_no_connection">No internet connection</string>
+    <string name="display_info_error">Oops! Something went wrong!</string>
+    <string name="display_info_connection">Internet is connected</string>
+    <string name="display_info_no_connection">No internet connection</string>
 </resources>
