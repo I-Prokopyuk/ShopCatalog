@@ -30,8 +30,7 @@ public class ProductDiffUtilCallback extends DiffUtil.Callback {
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         Product oldProduct = oldList.get(oldItemPosition);
         Product newProduct = newList.get(newItemPosition);
-        //return oldProduct.getId() == newProduct.getId();
-        return false;
+        return oldProduct.getProductId() == newProduct.getProductId();
     }
 
     @Override

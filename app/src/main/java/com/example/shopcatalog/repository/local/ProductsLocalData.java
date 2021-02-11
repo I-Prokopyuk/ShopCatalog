@@ -14,8 +14,8 @@ import io.reactivex.schedulers.Schedulers;
 @AppScoped
 public class ProductsLocalData implements ProductsData {
 
-    ProductDao productDao;
-    CompositeDisposable compositeDisposable;
+    private ProductDao productDao;
+    private CompositeDisposable compositeDisposable;
 
     public ProductsLocalData(ProductDao productDao, CompositeDisposable compositeDisposable) {
         this.productDao = productDao;
@@ -30,7 +30,7 @@ public class ProductsLocalData implements ProductsData {
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(productList ->
                                 loadProductsCallback.onResultCallback(productList)
-                        //                ,throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage())
+                        //                ,throwable -> Log.d(Constants.LOG_TAG, throwable.getMessage())
                 ));
     }
 

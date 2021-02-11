@@ -1,7 +1,5 @@
 package com.example.shopcatalog.repository;
 
-import android.util.Log;
-
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.di.scopes.Local;
@@ -40,9 +38,6 @@ public class ProductsCatalogRepository implements ProductsData {
         productsData.getProducts(category, startPosition, loadSize, new LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
-
-                Log.i("myLogs", "onResultCallback <<<<<<<<<<<<<<<<<<<<<<");
-
                 loadProductsCallback.onResultCallback(products);
 
                 if (!products.isEmpty() && onlineConnectedStatus.isOnlineConnected())
@@ -51,7 +46,7 @@ public class ProductsCatalogRepository implements ProductsData {
 
             @Override
             public void onErrorCallback() {
-                Log.i("myLogs", "onErrorCallback <<<<<<<<<<<<<<<<<<<<<<");
+                // get from local DB
                 getProductsFromRepository(productsLocalData, category, startPosition, loadSize, loadProductsCallback);
             }
         });

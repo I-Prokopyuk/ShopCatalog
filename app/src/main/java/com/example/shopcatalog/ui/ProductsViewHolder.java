@@ -18,13 +18,10 @@ import com.squareup.picasso.Picasso;
 
 public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    ListProductsBinding binding;
-
-    String productPriceCurrency;
-
-    Picasso picasso;
-
-    Product product;
+    private ListProductsBinding binding;
+    private String productPriceCurrency;
+    private Picasso picasso;
+    private Product product;
 
     public ProductsViewHolder(ListProductsBinding binding) {
         super(binding.getRoot());
@@ -38,7 +35,6 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void bind(Product product) {
-
         this.product = product;
 
         binding.productName.setText(product.getName());

@@ -23,7 +23,6 @@ public class WebViewActivity extends DaggerAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -36,7 +35,7 @@ public class WebViewActivity extends DaggerAppCompatActivity {
                                 binding.webView.setVisibility(View.INVISIBLE);
                                 Toast.makeText(this, R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
                             }
-                        } //,throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!")
+                        } //,throwable -> Log.d(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!")
                 );
     }
 

@@ -28,7 +28,6 @@ public class FullUrl {
             default:
                 return baseUrl;
         }
-
         return baseUrl + categoryUrl + productUrl;
     }
 }

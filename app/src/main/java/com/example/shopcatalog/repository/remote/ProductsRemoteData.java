@@ -15,8 +15,8 @@ import io.reactivex.schedulers.Schedulers;
 @AppScoped
 public class ProductsRemoteData implements ProductsData {
 
-    QueryLoadProducts queryLoadProducts;
-    CompositeDisposable compositeDisposable;
+    private QueryLoadProducts queryLoadProducts;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     public ProductsRemoteData(QueryLoadProducts catalogQuery, CompositeDisposable compositeDisposable) {
@@ -40,7 +40,7 @@ public class ProductsRemoteData implements ProductsData {
                 .subscribe(productList -> loadProductsCallback.onResultCallback(productList),
                         throwable -> {
                             loadProductsCallback.onErrorCallback();
-                            //Log.i(Constants.LOG_TAG, throwable.getMessage());
+                            //Log.d(Constants.LOG_TAG, throwable.getMessage());
                         }
                 ));
     }

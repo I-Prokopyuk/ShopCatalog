@@ -38,20 +38,7 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     }
 
     @Override
-    public void detachView() {
-        super.detachView();
-        clearCompositeDisposable();
-    }
-
-    @Override
-    public void destroy() {
-        clearCompositeDisposable();
-        compositeDisposable.dispose();
-    }
-
-    @Override
     public void loadProducts(String category) {
-
         getView().showProgressBar();
         getView().hideDisplayInfo();
 
@@ -65,9 +52,7 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
                     @Override
                     public void onZeroItemsLoaded() {
                         super.onZeroItemsLoaded();
-
                         getView().hideProgressBar();
-
                         if (onlineConnectedStatus.isOnlineConnected())
                             getView().showDisplayInfo(R.drawable.ic_baseline_cloud_off_150, R.string.display_info_error);
                         else
@@ -75,7 +60,6 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
                     }
                 })
                 .build();
-
         getView().showProducts(pagedListLiveData);
     }
 
@@ -87,5 +71,17 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     @Override
     public void clearCompositeDisposable() {
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        clearCompositeDisposable();
+    }
+
+    @Override
+    public void destroy() {
+        clearCompositeDisposable();
+        compositeDisposable.dispose();
     }
 }

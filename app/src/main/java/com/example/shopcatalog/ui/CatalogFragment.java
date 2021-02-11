@@ -34,61 +34,40 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     CatalogPresenter catalogPresenter;
 
     private ProductsPagedListAdapter productsAdapter;
-
     private FragmentCatalogBinding binding;
-
     private Disposable internetDisposable;
-
     private boolean isFragmentCreated;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
-
         setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentCatalogBinding.inflate(inflater, container, false);
-
-        View view = binding.getRoot();
-
         binding.list.setAdapter(productsAdapter);
-
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-
         catalogPresenter.attachView(this);
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnected -> {
-
-                    //default loaded
-
                     if (!isFragmentCreated) {
-
                         onlineConnectedStatus.setStatusOnlineConnected(isConnected);
-
                         catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_DEFAULT);
-
                         isFragmentCreated = true;
                     } else {
-
                         if ((onlineConnectedStatus.isOnlineConnected() != isConnected) && isFragmentCreated) {
-
                             onlineConnectedStatus.setStatusOnlineConnected(isConnected);
-
                             if (isConnected) {
                                 Toast.makeText(getContext(), R.string.display_info_connection, Toast.LENGTH_SHORT).show();
                                 catalogPresenter.invalidateDataSource();
@@ -117,7 +96,6 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
         super.onDestroy();
         catalogPresenter.destroy();
     }
-
 
     @Override
     public void showProducts(LiveData<PagedList<Product>> pagedListLiveData) {
