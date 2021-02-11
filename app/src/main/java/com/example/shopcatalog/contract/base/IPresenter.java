@@ -7,6 +7,4 @@ public interface IPresenter<T extends IView> {
     void detachView();
 
     void destroy();
-
-    void viewIsReady();
 }

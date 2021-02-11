@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/grey"
-    android:paddingBottom="@dimen/layout_margin">
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_margin"
-        app:cardCornerRadius="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin"
+        app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -42,6 +40,16 @@
                 app:layout_constraintStart_toStartOf="@+id/product_image"
                 app:layout_constraintTop_toTopOf="@+id/product_image" />
 
+            <View
+                android:id="@+id/view_bachground"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
@@ -60,8 +68,8 @@
                 android:text="@string/product_name_default"
                 android:textSize="@dimen/product_name_size"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/product_image"
-                tools:layout_editor_absoluteX="15dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/product_image" />
 
             <TextView
                 android:id="@+id/product_price"
@@ -71,8 +79,38 @@
                 android:textSize="@dimen/product_price_size"
                 app:layout_constraintBottom_toBottomOf="@+id/textView1"
                 app:layout_constraintStart_toEndOf="@+id/textView1" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/product_code"
+                android:textSize="@dimen/product_attribute_size"
+                app:layout_constraintBottom_toBottomOf="@+id/view_bachground"
+                app:layout_constraintStart_toStartOf="@+id/view_bachground"
+                app:layout_constraintTop_toTopOf="@+id/view_bachground" />
+
+            <TextView
+                android:id="@+id/product_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:textSize="@dimen/product_attribute_size"
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintStart_toEndOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/product_special_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:textColor="@color/red_500"
+                android:textSize="@dimen/product_attribute_size"
+                app:layout_constraintBottom_toBottomOf="@+id/product_price"
+                app:layout_constraintStart_toEndOf="@+id/product_price" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

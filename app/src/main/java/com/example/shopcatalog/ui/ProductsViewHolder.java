@@ -1,57 +1,65 @@
 package com.example.shopcatalog.ui;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
+import com.example.shopcatalog.databinding.ListProductsBinding;
+import com.example.shopcatalog.utils.FullUrl;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
+public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-public class ProductsViewHolder extends RecyclerView.ViewHolder {
-    TextView productName, productPrice;
-    ImageView productimage;
-    ProgressBar productProgressBar;
+    ListProductsBinding binding;
 
-    @Inject
+    String productPriceCurrency;
+
     Picasso picasso;
 
-    public ProductsViewHolder(@NonNull View itemView) {
-        super(itemView);
+    Product product;
 
-        productProgressBar = (ProgressBar) itemView.findViewById(R.id.product_progressBar);
-        productimage = (ImageView) itemView.findViewById(R.id.product_image);
-        productName = (TextView) itemView.findViewById(R.id.product_name);
-        productPrice = (TextView) itemView.findViewById(R.id.product_price);
+    public ProductsViewHolder(ListProductsBinding binding) {
+        super(binding.getRoot());
+        this.binding = binding;
+
+        this.picasso = Picasso.get();
+
+        productPriceCurrency = binding.getRoot().getResources().getString(R.string.product_price_currency);
+
+        binding.getRoot().setOnClickListener(this);
     }
 
     public void bind(Product product) {
 
-        productName.setText(Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage());
-        productPrice.setText(String.valueOf(product.getPrice()));
+        this.product = product;
 
+        binding.productName.setText(product.getName());
+        binding.productPrice.setText(String.valueOf(product.getPrice()) + " " + productPriceCurrency);
+
+        if (product.getSpecialPrice() > 0) {
+            binding.productPrice.setPaintFlags(binding.productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.productSpecialPrice.setText(String.valueOf(product.getSpecialPrice()) + " " + productPriceCurrency);
+        }
+        binding.productCode.setText(String.valueOf(product.getCode()));
 
         picasso.
-                load(Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())
+                load(Constants.CATALOG_API_BASE_URL + Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())
                 .error(R.drawable.ic_baseline_photo_camera_150)
                 .fit()
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .into(productimage, new Callback() {
+                .into(binding.productImage, new Callback() {
                     @Override
                     public void onSuccess() {
-                        productProgressBar.setVisibility(View.GONE);
+                        binding.productProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -59,5 +67,14 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder {
 
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        Context context = v.getContext();
+        Intent intent = new Intent(context, WebViewActivity.class);
+        String fullUrl = FullUrl.getFullUrl(product.getCategory(), product.getUrl());
+        intent.putExtra("url", fullUrl);
+        context.startActivity(intent);
     }
 }

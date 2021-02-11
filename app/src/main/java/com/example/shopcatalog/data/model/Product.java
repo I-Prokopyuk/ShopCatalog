@@ -20,9 +20,8 @@ public final class Product {
 
     @SerializedName("sku")
     @Expose
-    private String cod;
+    private String code;
 
-    @SerializedName("price")
     @Expose
     private int price;
 
@@ -30,13 +29,17 @@ public final class Product {
     @Expose
     private int specialPrice;
 
-    @SerializedName("name")
     @Expose
     private String name;
 
     @SerializedName("image")
     @Expose
     private String pathImage;
+
+    @Expose
+    private String url;
+
+    private String category;
 
     public int getProductId() {
         return productId;
@@ -46,12 +49,12 @@ public final class Product {
         this.productId = productId;
     }
 
-    public String getCod() {
-        return cod;
+    public String getCode() {
+        return code;
     }
 
-    public void setCod(String cod) {
-        this.cod = cod;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getPrice() {
@@ -86,7 +89,24 @@ public final class Product {
         this.pathImage = pathImage;
     }
 
-        public static final DiffUtil.ItemCallback<Product> DIFF_CALLBACK = new DiffUtil.ItemCallback<Product>() {
+    public String getCategory() {
+        return category;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public static final DiffUtil.ItemCallback<Product> DIFF_CALLBACK = new DiffUtil.ItemCallback<Product>() {
         @Override
         public boolean areItemsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
             return oldItem.getProductId() == newItem.getProductId();

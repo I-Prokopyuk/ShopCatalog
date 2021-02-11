@@ -1,18 +1,37 @@
 package com.example.shopcatalog.utils;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import com.example.shopcatalog.di.scopes.AppScoped;
 
+import javax.inject.Inject;
+
+@AppScoped
 public class OnlineConnectedStatus {
 
-    private final ConnectivityManager connectivityManager;
+    private boolean onlineConnected;
 
-    public OnlineConnectedStatus(ConnectivityManager connectivityManager) {
-        this.connectivityManager = connectivityManager;
+    @Inject
+    public OnlineConnectedStatus() {
+
+    }
+
+//    private final ConnectivityManager connectivityManager;
+//
+//    public OnlineConnectedStatus(ConnectivityManager connectivityManager) {
+//        this.connectivityManager = connectivityManager;
+//    }
+//
+//    public Boolean isOnlineConnected() {
+//        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+//    }
+
+    //using library Reactivenetwork, save the state of your Internet connection
+
+    public void setStatusOnlineConnected(Boolean onlineConnected) {
+        this.onlineConnected = onlineConnected;
     }
 
     public Boolean isOnlineConnected() {
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+        return onlineConnected;
     }
 }

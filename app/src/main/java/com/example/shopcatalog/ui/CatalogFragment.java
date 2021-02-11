@@ -1,112 +1,156 @@
 package com.example.shopcatalog.ui;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.contract.IContract;
 import com.example.shopcatalog.data.model.Product;
-import com.example.shopcatalog.executor.BackgroundThreadExecutor;
-import com.example.shopcatalog.executor.UiThreadExecutor;
-import com.example.shopcatalog.repository.ProductsCatalogDataSource;
+import com.example.shopcatalog.databinding.FragmentCatalogBinding;
+import com.example.shopcatalog.utils.OnlineConnectedStatus;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class CatalogFragment extends DaggerFragment implements IContract.View {
 
     @Inject
+    OnlineConnectedStatus onlineConnectedStatus;
+
+    @Inject
     CatalogPresenter catalogPresenter;
 
+    private ProductsPagedListAdapter productsAdapter;
 
-    ProductsPagedListAdapter productsAdapter;
+    private FragmentCatalogBinding binding;
 
-    PagedList.Config config;
+    private Disposable internetDisposable;
 
-    PagedList<Product> pagedList;
-
-    RecyclerView recyclerView;
+    private boolean isFragmentCreated;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPageSize(10)
-                .build();
+        productsAdapter = new ProductsPagedListAdapter(Product.DIFF_CALLBACK);
 
-        productsAdapter = new ProductsPagedListAdapter(null);
-
-
-        //setRetainInstance(true);
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_catalog, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        binding = FragmentCatalogBinding.inflate(inflater, container, false);
 
-        recyclerView.setAdapter(productsAdapter);
+        View view = binding.getRoot();
+
+        binding.list.setAdapter(productsAdapter);
 
         return view;
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onResume() {
         super.onResume();
+
+
         catalogPresenter.attachView(this);
+        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnected -> {
 
+                    //default loaded
 
-        Log.i(Constants.LOG_TAG, "Fragmnet onResume");
+                    if (!isFragmentCreated) {
 
-        catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_PHONE);
+                        onlineConnectedStatus.setStatusOnlineConnected(isConnected);
 
+                        catalogPresenter.loadProducts(Constants.CATALOG_CATEGORY_DEFAULT);
 
+                        isFragmentCreated = true;
+                    } else {
+
+                        if ((onlineConnectedStatus.isOnlineConnected() != isConnected) && isFragmentCreated) {
+
+                            onlineConnectedStatus.setStatusOnlineConnected(isConnected);
+
+                            if (isConnected) {
+                                Toast.makeText(getContext(), R.string.display_info_connection, Toast.LENGTH_SHORT).show();
+                                catalogPresenter.invalidateDataSource();
+                            } else
+                                Toast.makeText(getContext(), R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        catalogPresenter.detachView();
+        internetDisposable.dispose();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        catalogPresenter.detachView();
+        catalogPresenter.destroy();
     }
 
 
     @Override
-    public void showProgressBar() {
+    public void showProducts(LiveData<PagedList<Product>> pagedListLiveData) {
+        pagedListLiveData.observe(this, new Observer<PagedList<Product>>() {
+            @Override
+            public void onChanged(PagedList<Product> products) {
+                productsAdapter.submitList(products);
+            }
+        });
 
+    }
+
+    @Override
+    public void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-
+        binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
-    public void showProducts(ProductsCatalogDataSource productsCatalogDataSource) {
+    public void showDisplayInfo(int imageResource, int stringResource) {
+        binding.imageInfo.setImageResource(imageResource);
+        binding.textInfo.setText(getString(stringResource));
+        binding.imageInfo.setVisibility(View.VISIBLE);
+        binding.textInfo.setVisibility(View.VISIBLE);
+    }
 
-        pagedList = new PagedList.Builder<>(productsCatalogDataSource, config)
-                .setNotifyExecutor(new UiThreadExecutor())
-                .setFetchExecutor(new BackgroundThreadExecutor())
-                .build();
-
-        Log.i(Constants.LOG_TAG, "Fragment showProducts PagedList.Builder");
-
-        productsAdapter.submitList(pagedList);
-
-
+    @Override
+    public void hideDisplayInfo() {
+        binding.imageInfo.setVisibility(View.GONE);
+        binding.textInfo.setVisibility(View.GONE);
     }
 }
