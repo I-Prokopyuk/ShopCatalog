@@ -43,7 +43,7 @@ public class ProductsRepositoryModule {
     PagedList.Config providePagedListConfig() {
         return new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
-                .setPageSize(1)
+                .setPageSize(15)
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package com.example.shopcatalog.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -29,17 +28,16 @@ public class WebViewActivity extends DaggerAppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnected -> {
-                    if (isConnected) {
-                        webView.setVisibility(View.VISIBLE);
-                        webView.clearCache(true);
-                        webView.loadUrl(url);
-                    } else {
-                        webView.setVisibility(View.INVISIBLE);
-                        Toast.makeText(this, R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
-                    }
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!"));
-
-        Log.i("myLogs", "WebViewActivity Resume.....");
+                            if (isConnected) {
+                                webView.setVisibility(View.VISIBLE);
+                                webView.clearCache(true);
+                                webView.loadUrl(url);
+                            } else {
+                                webView.setVisibility(View.INVISIBLE);
+                                Toast.makeText(this, R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
+                            }
+                        } //,throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!")
+                );
     }
 
     @Override
@@ -60,6 +58,5 @@ public class WebViewActivity extends DaggerAppCompatActivity {
     protected void onPause() {
         super.onPause();
         internetDisposable.dispose();
-        Log.i("myLogs", "WebViewActivity pause.....");
     }
 }

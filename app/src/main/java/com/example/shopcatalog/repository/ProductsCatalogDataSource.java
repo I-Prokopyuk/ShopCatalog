@@ -42,7 +42,6 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
                     Log.i("myLogs", product.getName());
                 }
 
-
                 Log.i("myLogs", "loadInitial onResultCallback");
             }
 
@@ -66,11 +65,7 @@ public class ProductsCatalogDataSource extends PositionalDataSource<Product> {
         productsCatalogRepository.getProducts(category, loadRangestartPosition, params.loadSize, new ProductsData.LoadProductsCallback() {
             @Override
             public void onResultCallback(List<Product> products) {
-
-                //           if (category == "tv") products = new ArrayList<>();
-
                 callback.onResult(products);
-                Log.i("myLogs", "loadRange onResultCallback");
             }
 
             @Override

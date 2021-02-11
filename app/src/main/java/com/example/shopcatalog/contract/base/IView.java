@@ -11,5 +11,9 @@ public interface IView {
 
     void hideProgressBar();
 
+    void showDisplayInfo(int imageResource, int stringResource);
+
+    void hideDisplayInfo();
+
     void showProducts(LiveData<PagedList<Product>> pagedListLiveData);
 }

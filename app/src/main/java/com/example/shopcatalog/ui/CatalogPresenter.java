@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
+import com.example.shopcatalog.R;
 import com.example.shopcatalog.contract.IContract;
 import com.example.shopcatalog.contract.base.PresenterBase;
 import com.example.shopcatalog.data.model.Product;
@@ -52,6 +53,7 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
     public void loadProducts(String category) {
 
         getView().showProgressBar();
+        getView().hideDisplayInfo();
 
         if (compositeDisposable.size() > 0) clearCompositeDisposable();
 
@@ -63,12 +65,13 @@ public class CatalogPresenter extends PresenterBase implements IContract.Present
                     @Override
                     public void onZeroItemsLoaded() {
                         super.onZeroItemsLoaded();
-//
-//                        if (onlineConnectedStatus.isOnlineConnected()) {
-//
-//                        } else
 
+                        getView().hideProgressBar();
 
+                        if (onlineConnectedStatus.isOnlineConnected())
+                            getView().showDisplayInfo(R.drawable.ic_baseline_cloud_off_150, R.string.display_info_error);
+                        else
+                            getView().showDisplayInfo(R.drawable.ic_baseline_cloud_off_150, R.string.display_info_no_connection);
                     }
                 })
                 .build();
