@@ -4,60 +4,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
+import com.example.shopcatalog.databinding.ListProductsBinding;
 import com.example.shopcatalog.utils.FullUrl;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    TextView productName, productPrice, productSpecialPrice, productCode;
-    ImageView productimage;
-    ProgressBar productProgressBar;
+
+    ListProductsBinding binding;
+
     String productPriceCurrency;
 
     Picasso picasso;
 
     Product product;
 
-    public ProductsViewHolder(@NonNull View itemView) {
-        super(itemView);
+    public ProductsViewHolder(ListProductsBinding binding) {
+        super(binding.getRoot());
+        this.binding = binding;
 
         this.picasso = Picasso.get();
 
-        productProgressBar = (ProgressBar) itemView.findViewById(R.id.product_progressBar);
-        productimage = (ImageView) itemView.findViewById(R.id.product_image);
-        productName = (TextView) itemView.findViewById(R.id.product_name);
-        productPrice = (TextView) itemView.findViewById(R.id.product_price);
-        productSpecialPrice = (TextView) itemView.findViewById(R.id.product_special_price);
-        productCode = (TextView) itemView.findViewById(R.id.product_code);
+        productPriceCurrency = binding.getRoot().getResources().getString(R.string.product_price_currency);
 
-        productPriceCurrency = itemView.getResources().getString(R.string.product_price_currency);
-
-        itemView.setOnClickListener(this);
+        binding.getRoot().setOnClickListener(this);
     }
 
     public void bind(Product product) {
 
         this.product = product;
 
-        productName.setText(product.getName());
-        productPrice.setText(String.valueOf(product.getPrice()) + " " + productPriceCurrency);
+        binding.productName.setText(product.getName());
+        binding.productPrice.setText(String.valueOf(product.getPrice()) + " " + productPriceCurrency);
 
         if (product.getSpecialPrice() > 0) {
-            productPrice.setPaintFlags(productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            productSpecialPrice.setText(String.valueOf(product.getSpecialPrice()) + " " + productPriceCurrency);
+            binding.productPrice.setPaintFlags(binding.productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.productSpecialPrice.setText(String.valueOf(product.getSpecialPrice()) + " " + productPriceCurrency);
         }
-        productCode.setText(String.valueOf(product.getCode()));
+        binding.productCode.setText(String.valueOf(product.getCode()));
 
         picasso.
                 load(Constants.CATALOG_API_BASE_URL + Constants.CATALOG_API_URL_IMAGE_CATALOG + product.getPathImage())
@@ -65,10 +56,10 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
                 .fit()
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(productimage, new Callback() {
+                .into(binding.productImage, new Callback() {
                     @Override
                     public void onSuccess() {
-                        productProgressBar.setVisibility(View.GONE);
+                        binding.productProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override

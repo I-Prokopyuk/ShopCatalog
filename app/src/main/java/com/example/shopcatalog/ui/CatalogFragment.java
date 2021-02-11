@@ -4,20 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.contract.IContract;
 import com.example.shopcatalog.data.model.Product;
+import com.example.shopcatalog.databinding.FragmentCatalogBinding;
 import com.example.shopcatalog.utils.OnlineConnectedStatus;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
@@ -38,11 +35,7 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
     private ProductsPagedListAdapter productsAdapter;
 
-    private RecyclerView recyclerView;
-    private ProgressBar progressBar;
-    private ImageView imageInfo;
-    TextView textInfo;
-
+    private FragmentCatalogBinding binding;
 
     private Disposable internetDisposable;
 
@@ -60,14 +53,12 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_catalog, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        imageInfo = (ImageView) view.findViewById(R.id.image_info);
-        textInfo = (TextView) view.findViewById(R.id.text_info);
+        binding = FragmentCatalogBinding.inflate(inflater, container, false);
 
-        recyclerView.setAdapter(productsAdapter);
+        View view = binding.getRoot();
+
+        binding.list.setAdapter(productsAdapter);
 
         return view;
     }
@@ -75,6 +66,7 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     @Override
     public void onResume() {
         super.onResume();
+
 
         catalogPresenter.attachView(this);
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
@@ -115,6 +107,12 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         catalogPresenter.destroy();
@@ -134,26 +132,25 @@ public class CatalogFragment extends DaggerFragment implements IContract.View {
 
     @Override
     public void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        progressBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showDisplayInfo(int imageResource, int stringResource) {
-        imageInfo.setImageResource(imageResource);
-        textInfo.setText(getString(stringResource));
-        imageInfo.setVisibility(View.VISIBLE);
-        textInfo.setVisibility(View.VISIBLE);
+        binding.imageInfo.setImageResource(imageResource);
+        binding.textInfo.setText(getString(stringResource));
+        binding.imageInfo.setVisibility(View.VISIBLE);
+        binding.textInfo.setVisibility(View.VISIBLE);
     }
-
 
     @Override
     public void hideDisplayInfo() {
-        imageInfo.setVisibility(View.GONE);
-        textInfo.setVisibility(View.GONE);
+        binding.imageInfo.setVisibility(View.GONE);
+        binding.textInfo.setVisibility(View.GONE);
     }
 }

@@ -2,11 +2,11 @@ package com.example.shopcatalog.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
+import com.example.shopcatalog.databinding.ActivityWebviewBinding;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import dagger.android.support.DaggerAppCompatActivity;
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 public class WebViewActivity extends DaggerAppCompatActivity {
 
     private Disposable internetDisposable;
-    private WebView webView;
+    private ActivityWebviewBinding binding;
     private String url;
 
     @Override
@@ -29,11 +29,11 @@ public class WebViewActivity extends DaggerAppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnected -> {
                             if (isConnected) {
-                                webView.setVisibility(View.VISIBLE);
-                                webView.clearCache(true);
-                                webView.loadUrl(url);
+                                binding.webView.setVisibility(View.VISIBLE);
+                                binding.webView.clearCache(true);
+                                binding.webView.loadUrl(url);
                             } else {
-                                webView.setVisibility(View.INVISIBLE);
+                                binding.webView.setVisibility(View.INVISIBLE);
                                 Toast.makeText(this, R.string.display_info_no_connection, Toast.LENGTH_SHORT).show();
                             }
                         } //,throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "<<<Error remote connected!")
@@ -43,9 +43,8 @@ public class WebViewActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webview);
-
-        webView = (WebView) findViewById(R.id.webView);
+        binding = ActivityWebviewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         Bundle bundle = getIntent().getExtras();
 

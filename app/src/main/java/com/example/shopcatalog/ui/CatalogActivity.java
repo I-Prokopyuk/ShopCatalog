@@ -1,18 +1,15 @@
 package com.example.shopcatalog.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.shopcatalog.R;
 import com.example.shopcatalog.common.Constants;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.shopcatalog.databinding.ActivityCatalogBinding;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
@@ -24,52 +21,32 @@ public class CatalogActivity extends DaggerAppCompatActivity {
     @Inject
     CatalogPresenter catalogPresenter;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        Log.i("myLogs", "CatalogActivity Resume.....");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        Log.i("myLogs", "CatalogActivity Pause.....");
-    }
+    private ActivityCatalogBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalog);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        binding = ActivityCatalogBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        setSupportActionBar(binding.includedLayout.toolbar);
+
+        binding.includedLayout.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, binding.drawerLayout, binding.includedLayout.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // getSupportActionBar().setHomeButtonEnabled(true);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 item.setChecked(true);
-                drawer.closeDrawers();
+                binding.drawerLayout.closeDrawers();
 
                 switch (item.getItemId()) {
                     case R.id.nav_phone:
