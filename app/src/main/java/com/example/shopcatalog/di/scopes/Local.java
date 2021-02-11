@@ -10,5 +10,4 @@ import javax.inject.Qualifier;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Local {
-
 }

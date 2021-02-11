@@ -101,7 +101,6 @@ public final class Product {
         this.url = url;
     }
 
-
     public void setCategory(String category) {
         this.category = category;
     }

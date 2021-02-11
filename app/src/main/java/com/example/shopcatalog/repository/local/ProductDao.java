@@ -15,8 +15,8 @@ import io.reactivex.Single;
 @Dao
 public interface ProductDao {
 
-    @Query("SELECT * FROM Catalog WHERE category = :category")
-    DataSource.Factory<Integer, Product> getAll(String category);
+//    @Query("SELECT * FROM Catalog WHERE category = :category")
+//    DataSource.Factory<Integer, Product> getAll(String category);
 
     @Query("SELECT * FROM Catalog WHERE category = :category LIMIT :rowOffset,:rowCount")
     Single<List<Product>> getProducts(String category, int rowOffset, int rowCount);

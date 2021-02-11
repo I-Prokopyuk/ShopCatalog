@@ -1,8 +1,5 @@
 package com.example.shopcatalog.repository.remote;
 
-import android.util.Log;
-
-import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.repository.ProductsData;
@@ -29,7 +26,6 @@ public class ProductsRemoteData implements ProductsData {
 
     @Override
     public void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
-
         compositeDisposable.add(queryLoadProducts.getProducts(category, startPosition, loadSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -44,7 +40,7 @@ public class ProductsRemoteData implements ProductsData {
                 .subscribe(productList -> loadProductsCallback.onResultCallback(productList),
                         throwable -> {
                             loadProductsCallback.onErrorCallback();
-                            Log.i(Constants.LOG_TAG, throwable.getMessage());
+                            //Log.i(Constants.LOG_TAG, throwable.getMessage());
                         }
                 ));
     }

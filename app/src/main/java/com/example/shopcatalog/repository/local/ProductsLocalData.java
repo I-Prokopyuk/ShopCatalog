@@ -1,8 +1,5 @@
 package com.example.shopcatalog.repository.local;
 
-import android.util.Log;
-
-import com.example.shopcatalog.common.Constants;
 import com.example.shopcatalog.data.model.Product;
 import com.example.shopcatalog.di.scopes.AppScoped;
 import com.example.shopcatalog.repository.ProductsData;
@@ -27,23 +24,18 @@ public class ProductsLocalData implements ProductsData {
 
     @Override
     public void getProducts(String category, int startPosition, int loadSize, LoadProductsCallback loadProductsCallback) {
-
         compositeDisposable.add(productDao.getProducts(category, startPosition, loadSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(productList -> {
-
-                    loadProductsCallback.onResultCallback(productList);
-
-                    Log.i(Constants.LOG_TAG, "ProductsLocalData Local loaded...");
-
-                }, throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage() + "Error local loaded <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")));
+                .subscribe(productList ->
+                                loadProductsCallback.onResultCallback(productList)
+                        //                ,throwable -> Log.i(Constants.LOG_TAG, throwable.getMessage())
+                ));
     }
 
     @Override
     public void insertProduct(List<Product> productList) {
-
         compositeDisposable.add(Completable.fromAction(() -> productDao.insertProduct(productList))
                 .subscribeOn(Schedulers.io())
                 .subscribe());

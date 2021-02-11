@@ -10,12 +10,6 @@ import dagger.Provides;
 @Module
 public class UtilityModule {
 
-//    @AppScoped
-//    @Provides
-//    ConnectivityManager provideConnectivityManager(Application application) {
-//        return (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
-//    }
-
     @AppScoped
     @Provides
     Picasso providePicasso(Application application) {

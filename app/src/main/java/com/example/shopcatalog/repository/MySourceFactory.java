@@ -11,9 +11,7 @@ import javax.inject.Inject;
 public class MySourceFactory extends DataSource.Factory<Integer, Product> {
 
     private ProductsCatalogRepository productsCatalogRepository;
-
     private ProductsCatalogDataSource productsCatalogDataSource;
-
     private String category;
 
     @Inject
@@ -23,7 +21,6 @@ public class MySourceFactory extends DataSource.Factory<Integer, Product> {
 
     @Override
     public DataSource create() {
-
         return productsCatalogDataSource = new ProductsCatalogDataSource(productsCatalogRepository, category);
     }
 
