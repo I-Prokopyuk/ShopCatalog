@@ -13,7 +13,6 @@ Room based caching feature allows you to access data offline (no internet connec
 # Dependencies
 
 <ul>
-<li><p>LiveData</p></li>
 <li><p>Dagger 2</p></li>
 <li><p>RxJava 2</p></li>
 <li><p>Retrofit 2</p></li>
