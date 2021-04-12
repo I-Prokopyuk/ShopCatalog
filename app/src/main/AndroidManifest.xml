@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shopcatalog">
+    package="com.iprokopyuk.shopcatalog">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-        android:name=".app.Application"
+        android:name="com.iprokopyuk.shopcatalog.app.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Shop">
         <activity
-            android:name=".ui.CatalogActivity"
+            android:name="com.iprokopyuk.shopcatalog.ui.CatalogActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Shop.NoActionBar">
             <intent-filter>
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.WebViewActivity"
+            android:name="com.iprokopyuk.shopcatalog.ui.WebViewActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Shop.NoActionBar">
         </activity>
