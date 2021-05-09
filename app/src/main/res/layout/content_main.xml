@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.example.shopcatalog.ui.CatalogFragment"
+        android:name="com.iprokopyuk.shopcatalog.ui.CatalogFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
